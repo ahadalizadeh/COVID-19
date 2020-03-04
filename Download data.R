@@ -1,6 +1,5 @@
 
 covid19.data <- function(last.day="03-03-2020"){
-  sink()
   oldw <- getOption("warn")
    options(warn = -1)
   librares = "readr"
@@ -44,7 +43,6 @@ covid19.data <- function(last.day="03-03-2020"){
     options(warn = oldw)
     data
     }
-sink()
 
 COVID19 <- covid19.data() 
 cat("\n\nAhad: You can find data in `COVID19` variable!\n\n")
