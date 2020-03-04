@@ -1,7 +1,7 @@
 
 covid19.data <- function(last.day="03-03-2020"){
   oldw <- getOption("warn")
-  options(warn = -1)
+  # options(warn = -1)
   librares = "readr"
   for(i in librares)
     if(i %in% rownames(installed.packages()) == FALSE) install.packages(i)
