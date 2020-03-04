@@ -43,4 +43,4 @@ covid19.data <- function(last.day="03-03-2020"){
     }
  
 COVID19 <- covid19.data() 
-
+cat("Ahad: You can find data in `COVID19` variable!")
