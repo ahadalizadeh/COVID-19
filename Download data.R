@@ -1,5 +1,5 @@
 
-covid19.data <- function(last.day="03-03-2020"){
+covid19.data <- function(last.day="03-04-2020"){
   oldw <- getOption("warn")
    options(warn = -1)
   librares = "readr"
@@ -27,7 +27,7 @@ covid19.data <- function(last.day="03-03-2020"){
       1), "%m-%d-%Y")
   line = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/"
   data= list()
-  name <- sample(c("Payam","Amir","Saman"),1)
+  name <- Sys.getenv("USERNAME")
   for (i in 1:length(date)) {
     progress(i, min = 1, max = length(date), 
                         title = "OUR COVID19 GROUP", text = paste0(name, " wait, please!"))
