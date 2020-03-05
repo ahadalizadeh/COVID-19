@@ -1,5 +1,5 @@
 source("https://raw.githubusercontent.com/ahadalizadeh/COVID-19/master/Download%20data.R")
-# COVID19 <- covid19.data(last.day="03-04-2020") 
+
 
 source("https://raw.githubusercontent.com/ahadalizadeh/utility_fun/master/utility_fun.R")
 names(COVID19)
@@ -10,7 +10,8 @@ Iran$Confirmed.daily <- c(0,Iran$Confirmed)  %>%  diff
 Iran$Recovered.daily <- c(0,Iran$Recovered)  %>%  diff 
 Iran$Deaths.daily <- c(0,Iran$Deaths)  %>%  diff  
 
-Iran$Deaths/Iran$Confirmed  
+
+######## All countries incidence -----
 Inc <-
   ggplot(COVID19, 
          aes(x=date, 
@@ -32,6 +33,7 @@ ggsave("Inc.jpg", Inc, width = 10, height = 12.5)
 
 
 
+######## Iran incidence -----
 (Inc.Iran <-   reshape2::melt(Iran,measure.vars=c(4:6) ) %>% 
     ggplot(aes(x=date, 
                y=value,
@@ -59,6 +61,8 @@ ggsave("Inc.jpg", Inc, width = 10, height = 12.5)
 ggsave("Inc.Iran.jpg", Inc.Iran, width = 5, height = 5)
 
 
+
+######## Iran daily incidence -----
 (Inc.Iran.daily <-   reshape2::melt(Iran,measure.vars=c(10:12) ) %>% 
     ggplot(aes(x=date, 
                y=value,
@@ -87,3 +91,21 @@ ggsave("Inc.Iran.jpg", Inc.Iran, width = 5, height = 5)
 
 ggsave("Inc.Iran.daily.jpg", Inc.Iran.daily, width = 5, height = 5)
 
+########### Iran CFR trend ------
+ 
+Iran.CFR.trend=ggplot(Iran[-c(1:3),], aes(x=date, 
+           y=Deaths/Confirmed*100, 
+           group=1)) +
+  stat_summary(geom="line", fun.y = sum,alpha=0.5 ,color="red",size=1 )+
+  stat_summary(geom="point", fun.y = sum,alpha=0.5,color="red"  )+
+  labs(fill="",color="",y="Daily CFR",x="Date") +
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        panel.grid.major.x = element_line()) +
+  annotate("text",
+           x=8,
+           y=15,
+           label="Designed by Iranian COVID19 Research Group",
+           alpha= 0.1)+
+  scale_y_continuous(breaks=seq(0,25,5))
+ggsave("Iran.CFR.trend.jpg", Iran.CFR.trend, width = 5, height = 5)
