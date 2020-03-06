@@ -1,4 +1,4 @@
-covid19.data <- function(last.day = "03-04-2020") {
+covid19.data <- function(last.day = "03-05-2020") {
   oldw <- getOption("warn")
   options(warn = -1)
   librares = "readr"
