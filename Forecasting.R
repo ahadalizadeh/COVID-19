@@ -38,7 +38,7 @@ for (j in 1:n) {
              day = d$day[[1]],
              date= d$date[[1]])
   
-}
+} 
   if( i == 1) d.main <- d.temp2
   if( i != 1) d.main <- rbind(d.main, d.temp2) 
 }
