@@ -1,5 +1,3 @@
-
-### Data Manipulation---------
 source("https://raw.githubusercontent.com/ahadalizadeh/COVID-19/master/Download%20data.R")
 source("https://raw.githubusercontent.com/ahadalizadeh/utility_fun/master/utility_fun.R")
 
@@ -7,42 +5,60 @@ diff.fun <- function(data){
   if(!is.atomic(data)) stop("The input data must be atomic!")
   list(diff(c(0,data)))
 }
-names(COVID19)[2] <- "day2"
-COVID19.Cumulative2 <- COVID19  %>% 
-  group_by(date) %>% 
+
+# COVID19<- COVID19.main
+names(COVID19)[2] <- "Country.Region"
+
+COVID19.Cumulative <- COVID19  %>% 
+  group_by(date,Country.Region ) %>% 
   summarise(
-    Confirmed.Cumulative2= sum(Confirmed, na.rm = TRUE),
-    Deaths.Cumulative2= sum(Deaths, na.rm = TRUE),
-    Recovered.Cumulative2= sum(Recovered, na.rm = TRUE),
-    day2= mean(day, na.rm = TRUE)
+    Confirmed.Cumulative= sum(Confirmed, na.rm = TRUE),
+    Deaths.Cumulative= sum(Deaths, na.rm = TRUE),
+    Recovered.Cumulative= sum(Recovered, na.rm = TRUE),
+    day= mean(day, na.rm = TRUE)
   ) %>% 
   as.data.frame() 
-COVID19.temp2<- COVID19.Cumulative2  %>% 
-  group_by(date) %>% 
+COVID19.temp<- COVID19.Cumulative  %>% 
+  group_by(Country.Region ) %>% 
   summarise(
-    Confirmed.Daily2= diff.fun(Confirmed.Cumulative2),
-    Deaths.Daily2= diff.fun(Deaths.Cumulative2),
-    Recovered.Daily2= diff.fun(Recovered.Cumulative2),
-    day2=list(day2) 
+    Confirmed.Daily= diff.fun(Confirmed.Cumulative),
+    Deaths.Daily= diff.fun(Deaths.Cumulative),
+    Recovered.Daily= diff.fun(Recovered.Cumulative),
+    date = list(date),
+    day=list(day) 
   )
 
-for (i in 1:dim(COVID19.temp2)[1]){
-  d2 = COVID19.temp2[i,]
-  n2= length(d2$Confirmed.Daily2[[1]])
-  d.temp22 = data.frame(Confirmed.Daily2 = d2$Confirmed.Daily2[[1]],
-                        Deaths.Daily2 = d2$Deaths.Daily2[[1]],
-                        Recovered.Daily2 = d2$Recovered.Daily2[[1]],
-                        day2 = d2$day2[[1]])
+for (i in 1:dim(COVID19.temp)[1]){
+  d = COVID19.temp[i,]
+  n= length(d$Confirmed.Daily[[1]])
+  d.temp2 = data.frame(Country.Region = rep(d$Country.Region,n),
+                       Confirmed.Daily = d$Confirmed.Daily[[1]],
+                       Deaths.Daily = d$Deaths.Daily[[1]],
+                       Recovered.Daily = d$Recovered.Daily[[1]],
+                       day = d$day[[1]],
+                       date= d$date[[1]])
   
   
-  if( i == 1) d.main2 <- d.temp22
-  if( i != 1) d.main2 <- rbind(d.main2, d.temp22) 
+  if( i == 1) d.main <- d.temp2
+  if( i != 1) d.main <- rbind(d.main, d.temp2) 
 }
-d.main2 <- d.main2[with(d.main2,order(day2)),]
+d.main <- d.main[with(d.main,order(Country.Region,day)),]
+
+COVID19 <-merge(COVID19.Cumulative,d.main, 
+                by.x = c("Country.Region","day","date"), 
+                by.y =  c("Country.Region","day","date"))
+COVID19 <- COVID19[with(COVID19,order(Country.Region,day)),]
 
 
-COVID192 <-merge(COVID19.Cumulative2,d.main2, 
-                 by.x = c("day2"), 
-                 by.y =  c("day2"))
-COVID192 <- COVID192[with(COVID192,order(day2)),]
+#######Get daily global data
+COVID19.global<- COVID19  %>% 
+  group_by(day) %>% 
+  summarise(
+        Confirmed.Daily= sum(Confirmed.Cumulative, na.rm = TRUE),
+            Deaths.Daily= sum(Deaths.Cumulative, na.rm = TRUE),
+            Recovered.Daily= sum(Recovered.Cumulative, na.rm = TRUE),
+            date = date[1] 
+        )
+  
 
+COVID19.global  %>% View()
