@@ -62,3 +62,8 @@ COVID19.global<- COVID19  %>%
   
 
 COVID19.global  %>% View()
+COVID19.global2=cbind(COVID19.global$day,COVID19.global$date,Confirmed.Cumulative=COVID19.global$Confirmed.Daily,
+                      Deaths.Cumulative=COVID19.global$Deaths.Daily,Recovered.Cumulative=COVID19.global$Recovered.Daily,Confirmed.Daily=diff(c(0,COVID19.global$Confirmed.Daily)),
+      Deaths.Daily=diff(c(0,COVID19.global$Deaths.Daily)),
+      Recovered.Daily=diff(c(0,COVID19.global$Recovered.Daily)))
+COVID19.global2  %>% View()
