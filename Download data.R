@@ -1,4 +1,4 @@
-covid19.data <- function(last.day = "04-11-2020") {
+covid19.data <- function(last.day = "07-03-2021") {
   last.day<<-last.day
   oldw <- getOption("warn")
   options(warn = -1)
